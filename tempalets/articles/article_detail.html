@@ -1,0 +1,30 @@
+{% extends 'news_app/base.html' %}
+
+  {% block content %}
+  <div class="jumbotron">
+
+    {% if user.is_authenticated %}
+
+    <p> 
+        <span><a href="{% url 'article_app:article_list' %}">Go To All Articles</a></span>
+        <span><a href="{% url 'article_app:user_posts' %}">Go To Your Articles</a></span>
+    </p>
+
+    {% else %}
+      <p><a href="{% url 'article_app:article_list' %}">Go To All Article</a></p>
+    {% endif %}
+
+    
+
+    <h2>{{object.title}}</h2>
+
+    <p>{{object.author}} | {{object.date}}</p>
+
+    <!-- <a href="{% url 'article_app:article_edit' object.pk %}">Edit</a>
+    <a href="{% url 'article_app:article_delete' object.pk %}">Delete</a> -->
+
+    <p>{{object.body}}</p>
+
+  </div>
+
+  {% endblock %}

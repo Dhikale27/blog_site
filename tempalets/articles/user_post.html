@@ -1,0 +1,32 @@
+{% extends 'news_app/base.html' %}
+
+    {% block title%} User Posts {% endblock %}
+
+
+  {% block content %}
+
+
+    {% if posts %}
+
+        {% for post in posts %}
+            <div>
+                <span><a href="{% url 'article_app:article_detail' post.pk %}"> <h4>{{post.title}}</h4></a></span>
+                <span>Posted on {{post.date}}</span>
+            </div>
+
+            <div>
+                <a href="{% url 'article_app:article_edit' post.pk %}">Edit</a> |
+                <a href="{% url 'article_app:article_delete' post.pk %}">Delete</a>
+              </div>
+              <br>
+        
+            <p>{{post.body}}</p>
+        {% endfor %}
+
+    {% else %}
+    <br>
+
+        <h3><center>You Have not Posted any article Yet</center></h3>
+    {% endif %}
+    
+  {%endblock content %}

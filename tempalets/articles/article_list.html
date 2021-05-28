@@ -1,0 +1,34 @@
+{% extends 'news_app/base.html' %}
+
+  {% block content %} 
+    {% for item in article_list %}
+      <div class="card jumbotron">
+        <div class="card-header">
+          <span class="font-weight-bold">
+            <a href="{% url 'article_app:article_detail' item.pk %}"
+              >{{item.title}}</a
+            ></span
+          >
+          <span class="text-muted">by {{item.author}} | {{item.date}}</span>
+        </div>
+        <div class="card-body">
+          <p>{{item.body}}</p>
+        </div>
+        <!-- <div class="card-footer text-center text-muted">
+          <a href="{% url 'article_app:article_edit' item.pk %}">Edit</a> |
+          <a href="{% url 'article_app:article_delete' item.pk %}">Delete</a>
+        </div> -->
+
+        <div class="card-footer">
+          {% for comment in item.comments.all %}
+          <p>
+            <span class="font-weight-bold"> {{comment.author}} </span>
+            {{comment}} {{comment.count}}
+          </p>
+          {% endfor %}
+        </div>
+      </div>
+      <br />
+    {% endfor %} 
+  {% endblock %}
+

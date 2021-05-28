@@ -1,0 +1,10 @@
+{%extends 'news_app/base.html'%} {% block title %}Log In{% endblock title %}
+{%block content%}
+
+<h2>Log in</h2>
+<form method="post">
+  {%csrf_token%} {{form.as_p}}
+  <input class="btn btn-primary" type="submit" value="Log In" />
+</form>
+
+{%endblock content%}

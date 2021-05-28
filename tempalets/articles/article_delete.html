@@ -1,0 +1,13 @@
+{% extends 'news_app/base.html' %}
+<div class="cantainer">
+  {% block content %}
+
+  <h1>Delet</h1>
+  <form method="post">
+    {% csrf_token %}
+    <h3>Do you want to delete?</h3>
+    <input class="btn btn-info" type="submit" value="Confirm" />
+  </form>
+
+  {% endblock content %}
+</div>
