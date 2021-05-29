@@ -1,0 +1,77 @@
+{% extends 'news_app/base.html' %}
+
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="jumbotron">
+
+    {% if user.is_authenticated %}
+
+    <p>
+        <span><a href="{% url 'article_app:article_list' %}">Go To All Articles</a></span>
+        <span><a href="{% url 'article_app:user_posts' %}">Go To Your Articles</a></span>
+    </p>
+
+    {% else %}
+    <p><a href="{% url 'article_app:article_list' %}">Go To All Article</a></p>
+    {% endif %}
+
+
+
+    <h2>{{article.title}}</h2>
+
+    <p>{{article.author}} | {{article.date}}</p>
+
+    <a href="{% url 'article_app:article_edit' article.pk %}">Edit</a>
+    <a href="{% url 'article_app:article_delete' article.pk %}">Delete</a>
+
+
+    <p>{{article.body}}</p>
+
+    <!-- to acess data other table which has foreign key with related name as 'comments'
+            where comments act as an manager to acess the data of other table, If there is no
+            related name mention then manager name will be 'comment_set' -->
+
+    <div class="card-footer">
+
+        <!-- this code block will show number of comments -->
+        {% with article.comments.count as total_comments %}
+        <h6>{{total_comments}} comment{{total_comments | pluralize}}</h6>
+        {% endwith %}
+        <br>
+
+
+
+        <!-- this block of code will display form to add comment -->
+        <!-- <h6>Add comment below</h6>
+
+        <form method="post">
+            {%csrf_token%}
+            {{comment_form | crispy}}
+            <input class="btn btn-primary" type="submit" value="Submit" />
+        </form>
+        <br> -->
+
+
+
+        <!-- this code block will dispaly list of all coments -->
+
+        <h6>List of all comments</h6>
+
+        {% for comment in article.comments.all %}
+        <div class="comment">
+            <p class="info">
+                <span>Comment {{forloop.counter}} by {{ comment.name }}</span><br>
+                <span>{{ comment.body }}</span>
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
+
+</div>
+
+{% endblock %}

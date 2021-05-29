@@ -8,5 +8,5 @@ from django.urls import reverse_lazy
 
 class SingUpView(CreateView):
     form_class = CustomeUserCreationForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('login')
     template_name = 'registration/singup.html'

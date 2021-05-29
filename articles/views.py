@@ -1,10 +1,11 @@
 from django.contrib.auth.mixins import (
     LoginRequiredMixin, UserPassesTestMixin)
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import (ListView, DetailView)
 from django.views.generic.edit import (UpdateView, DeleteView, CreateView)
 from .models import Article, Comment
 from django.urls import reverse_lazy
+from .forms import ComentForm
 # Create your views here.
 
 
@@ -13,9 +14,9 @@ class ArticleListView(ListView):         # LoginRequiredMixin,
     template_name = 'articles/article_list.html'
 
 
-class ArticleDetailView(DetailView):          # LoginRequiredMixin,
-    model = Article
-    template_name = 'articles/article_detail.html'
+# class ArticleDetailView(DetailView):          # LoginRequiredMixin,
+#     model = Article
+#     template_name = 'articles/article_detail.html'
 
 
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -58,6 +59,28 @@ class ArticleCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
+def article_detail(request, pk):
+    article = get_object_or_404(Article, pk=pk,)
+
+    # comments = Article.comments.all()
+
+    new_comment = None
+
+    if request.method == 'POST':
+        comment_form = ComentForm(request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.article = article
+            new_comment.save()
+            return redirect('article_app:article_detail', pk=pk)
+
+    else:
+        comment_form = ComentForm()
+
+    # 'comments': comments,
+    return render(request, 'articles/article_detail.html', {'article': article, 'comment_form': comment_form, 'new_comment': new_comment})
+
+
 def user_post_list(request):
 
     current_user = request.user
@@ -67,20 +90,33 @@ def user_post_list(request):
     return render(request, 'articles/user_post.html', {'posts': posts})
 
 
-'''
+def user_article_detail(request, pk):
+    article = get_object_or_404(Article, pk=pk,)
 
-    def get_context_data(self, **kwargs):
-        self.country = get_object_or_404(Countries, id=self.kwargs['country_id'])
-        kwargs['country'] = self.country
-        return super().get_context_data(**kwargs)
-'''
+    # # comments = Article.comments.all()
+
+    # new_comment = None
+
+    # if request.method == 'POST':
+    #     comment_form = ComentForm(request.POST)
+    #     if comment_form.is_valid():
+    #         new_comment = comment_form.save(commit=False)
+    #         new_comment.article = article
+    #         new_comment.save()
+    #         return redirect('article_app:article_detail', pk=pk)
+
+    # else:
+    #     comment_form = ComentForm()
+
+    # 'comments': comments,
+    return render(request, 'articles/user_article_detail.html', {'article': article,})
 
 
-class AddCommentView(CreateView):
-    model = Comment
-    template_name = 'articles/add_coment.html'
-    fields = ('name', 'email', 'body',)
+# class AddCommentView(CreateView):
+#     model = Comment
+#     template_name = 'articles/add_coment.html'
+#     fields = ('name', 'email', 'body',)
 
-    def form_valid(self, form):
-        form.instance.article_id = self.request.article.id
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.instance.article_id = self.request.article.id
+#         return super().form_valid(form)

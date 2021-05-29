@@ -3,15 +3,16 @@
 {% block title %} Sign Up {% endblock %}
 
 {%block content%}
-  {% load crispy_forms_tags %}
+{% load crispy_forms_tags %}
 
 
-  <h2>Sing UP</h2>
+<h2>Sing UP</h2>
 
-  <form method="post">
-    {%csrf_token%}
-    {{form | crispy}}
-    <input class="btn btn-primary" type="submit" value="Sing Up" />
-  </form>
+<form method="post">
+  {%csrf_token%}
+  {{form | crispy}}
+  <input class="btn btn-primary" type="submit" value="Sing Up" />
+</form>
+<p>If already Registerd! Log In <a href="{% url 'login' %}">here</a></p>
 
 {%endblock content%}
