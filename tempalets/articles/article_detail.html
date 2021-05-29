@@ -20,10 +20,34 @@
 
     <p>{{object.author}} | {{object.date}}</p>
 
-    <!-- <a href="{% url 'article_app:article_edit' object.pk %}">Edit</a>
-    <a href="{% url 'article_app:article_delete' object.pk %}">Delete</a> -->
+    <a href="{% url 'article_app:article_edit' object.pk %}">Edit</a> |
+    <a href="{% url 'article_app:article_delete' object.pk %}">Delete</a>
 
     <p>{{object.body}}</p>
+
+      <!-- to acess data other table which has foreign key with related name as 'comments'
+          where comments act as an manager to acess the data of other table, If there is no
+          related name mention then manager name will be 'comment_set' -->
+
+    <div class="card-footer">
+      <h6>Add Comemnt <a href="{% url 'article_app:add_comment' %}">Here</a></h6>
+      
+      {% with object.comments.count as total_comments %}
+        <h6>{{total_comments}} comment{{total_comments | pluralize}}</h6>
+      {% endwith %}
+    
+      {% for comment in object.comments.all %}
+        <div class="comment">
+          <p class="info">
+            <span>Comment {{forloop.counter}} by {{ comment.name }}</span><br>
+              <span>{{ comment.body }}</span>
+          </p>
+        
+        </div>
+      {% endfor %}
+    </div>
+
+
 
   </div>
 

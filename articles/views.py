@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import (
 from django.shortcuts import render
 from django.views.generic import (ListView, DetailView)
 from django.views.generic.edit import (UpdateView, DeleteView, CreateView)
-from .models import Article
+from .models import Article, Comment
 from django.urls import reverse_lazy
 # Create your views here.
 
@@ -65,3 +65,22 @@ def user_post_list(request):
     posts = Article.objects.filter(author_id=current_user.id)
 
     return render(request, 'articles/user_post.html', {'posts': posts})
+
+
+'''
+
+    def get_context_data(self, **kwargs):
+        self.country = get_object_or_404(Countries, id=self.kwargs['country_id'])
+        kwargs['country'] = self.country
+        return super().get_context_data(**kwargs)
+'''
+
+
+class AddCommentView(CreateView):
+    model = Comment
+    template_name = 'articles/add_coment.html'
+    fields = ('name', 'email', 'body',)
+
+    def form_valid(self, form):
+        form.instance.article_id = self.request.article.id
+        return super().form_valid(form)
